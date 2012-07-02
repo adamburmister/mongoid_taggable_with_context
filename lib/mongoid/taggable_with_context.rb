@@ -56,7 +56,9 @@ module Mongoid::TaggableWithContext
 
       # setup fields & indexes
       field tags_array_field, :type => Array, :default => options[:default]
-      index tags_array_field
+      # index tags_array_field
+      
+      index({ tags_array_field: 1 }, { background: true })
 
       # singleton methods
       class_eval <<-END
@@ -153,7 +155,7 @@ module Mongoid::TaggableWithContext
     end
 
     def convert_array_to_string(ary = [], separator = " ")
-      ary.join(separator)
+      (ary || []).join(separator)
     end
 
     def clean_up_array(ary = [])
